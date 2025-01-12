@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/style.css" />
+
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+    <script src="../js/ajaxcalls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      $(document).ready(function () {
+        console.log("Document ready!");
+        $("#registerForm").submit((event) => {
+          event.preventDefault();
+          console.log("Form submitted!"); // בדוק אם הפונקציה פועלת
+          submitToServer(); // קריאה לפונקציה
+        });
+
+        $("#loginForm").submit((event) => {
+          event.preventDefault();
+          console.log("Form login submitted!"); // בדוק אם הפונקציה פועלת
+          Login(); // קריאה לפונקציה
+        });
+      });
+
+      function submitToServer() {
+        console.log("submit");
+        let user = {
+          // id: $("#registerId").val(),
+          name: $("#registerName").val(),
+          email: $("#registerEmail").val(),
+          password: $("#registerPassword").val(),
+        };
+
+        const api = "https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Users";
+        console.log(user.name);
+        ajaxCall("POST", api, JSON.stringify(user), POSTUsersSCB, POSTUsersECB);
+        return false;
+      }
+
+      function POSTUsersSCB() {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title:
+            "Congratulations " +
+            $("#registerName").val() +
+            "! Your account has been successfully created.",
+          showConfirmButton: false,
+          timer: 3000,
+        }).then(() => {
+          // לאחר סיום ההודעה חוזרים ל-LOGIN
+          $("#DivReg").hide();
+          $("#DivLogIn").show();
+        });
+      }
+
+      function POSTUsersECB(err) {
+        console.log(err);
+      }
+
+      function Login() {
+        console.log("try to log in");
+        let user = {
+          id: 0,
+          name: "",
+          email: $("#loginEmail").val(),
+          password: $("#loginPassword").val(),
+        };
+
+        const api =
+          "https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Users/login";
+        ajaxCall(
+          "POST",
+          api,
+          JSON.stringify(user),
+          POSTUsersLogSCB,
+          POSTUsersLogECB
+        );
+        return false;
+      }
+
+      function POSTUsersLogSCB(user) {
+        console.log(user);
+        localStorage.setItem("user", JSON.stringify(user));
+        console.log(
+          "User saved to local storage:",
+          localStorage.getItem("user")
+        );
+
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Welcome to SteamStore Website",
+          showConfirmButton: false,
+          timer: 3000,
+        }).then(() => {
+          window.location.href = "./index.html";
+        });
+      }
+
+      function POSTUsersLogECB(err) {
+        console.log(err);
+      }
+
+      $(document).on("input", "#registerPassword", function () {
+        console.log("enter to the input");
+        var pattern = new RegExp($(this).attr("pattern"));
+        var value = $(this).val();
+        var message =
+          "בבקשה הזן סיסמה בפורמט המבוקש: רק אותיות גדולות באנגלית ומספרים, לפחות 5 תווים.";
+        this.setCustomValidity(value.match(pattern) ? "" : message);
+      });
+    </script>
+
+    <script>
+      $(document).ready(function () {
+        console.log("Document ready!");
+
+        // מעבר לטופס הרשמה
+        $("#showRegisterForm").click(() => {
+          $("#DivLogIn").hide();
+          $("#DivReg").show();
+        });
+
+        // מעבר לטופס התחברות
+        $("#showLoginForm").click(() => {
+          $("#DivReg").hide();
+          $("#DivLogIn").show();
+        });
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const backgroundContainer = document.querySelector(
+          ".background-carousel"
+        );
+
+        // יצירת אלמנט קנבס
+        const canvas = document.createElement("canvas");
+        backgroundContainer.appendChild(canvas);
+
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particlesArray = [];
+        const numberOfParticles = 100;
+
+        class Particle {
+          constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 5 + 1; // גודל חלקיקים
+            this.speedX = Math.random() * 3 - 1.5;
+            this.speedY = Math.random() * 3 - 1.5;
+          }
+
+          update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            // בדיקת גבולות
+            if (this.x < 0 || this.x > canvas.width) this.speedX = -this.speedX;
+            if (this.y < 0 || this.y > canvas.height)
+              this.speedY = -this.speedY;
+          }
+
+          draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            ctx.fill();
+          }
+        }
+
+        function initParticles() {
+          for (let i = 0; i < numberOfParticles; i++) {
+            particlesArray.push(new Particle());
+          }
+        }
+
+        function animateParticles() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          particlesArray.forEach((particle) => {
+            particle.update();
+            particle.draw();
+          });
+          requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+
+        // עדכון גודל קנבס בעת שינוי חלון
+        window.addEventListener("resize", () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div class="background-carousel"></div>
+    <div class="container">
+      <h1 class="forms">Welcome to Steam Store</h1>
+      <div class="form-container">
+        <div id="DivLogIn">
+          <!-- טופס התחברות -->
+          <form id="loginForm">
+            <h2>Login</h2>
+            <label>Email:</label>
+            <input
+              type="email"
+              id="loginEmail"
+              placeholder="Enter your email"
+              required
+            />
+
+            <label>Password:</label>
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="Enter your password"
+              pattern="^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]{5,}$"
+              required
+            />
+
+            <button type="submit">Login</button>
+          </form>
+          <button id="showRegisterForm">Register</button>
+        </div>
+        <!-- טופס הרשמה -->
+        <div id="DivReg" style="display: none">
+          <form id="registerForm">
+            <h2>Register</h2>
+            <!--
+            <label>ID:</label>
+            <input
+              type="number"
+              id="registerId"
+              placeholder="Enter an ID"
+              required
+            />
+-->
+            <label>Name:</label>
+            <input
+              type="text"
+              id="registerName"
+              placeholder="Enter your Name"
+              required
+            />
+
+            <label>Email:</label>
+            <input
+              type="email"
+              id="registerEmail"
+              placeholder="Enter your email"
+              required
+            />
+
+            <label>Password:</label>
+            <input
+              type="password"
+              id="registerPassword"
+              placeholder="Enter a password (Uppercase and Numbers)"
+              pattern="^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]{5,}$"
+              required
+            />
+
+            <button>Register</button>
+          </form>
+          <button id="showLoginForm">Back to Login</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

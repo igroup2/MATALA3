@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Area</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="../js/ajaxcalls.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      $(document).ready(function () {
+        console.log("Personal area ready!");
+
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        // בדיקה אם המשתמש קיים
+        if (user) {
+          // הזנת הנתונים לשדות
+          document.getElementById("name").value = user.name || "";
+          document.getElementById("email").value = user.email || "";
+          document.getElementById("password").value = user.password || "";
+        } else {
+          console.error("User not found in localStorage.");
+        }
+
+        $("#updateForm").submit((event) => {
+          event.preventDefault();
+          console.log("Update form submitted!");
+          updatePersonalDetails(); // קריאה לפונקציה לעדכון פרטים
+        });
+      });
+
+      function updatePersonalDetails() {
+        console.log("Updating details start");
+
+        let UserID;
+        let Updateuser;
+
+        let CurrentUser = localStorage.getItem("user");
+
+        if (CurrentUser) {
+          UserID = JSON.parse(CurrentUser).id;
+          console.log("user - ", CurrentUser);
+          console.log("user id - ", UserID);
+        }
+        Updateuser = {
+          id: UserID,
+          name: $("#name").val(),
+          email: $("#email").val(),
+          password: $("#password").val(),
+        };
+
+        console.log(Updateuser);
+
+        const api = `https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Users/UpdateDetails`;
+        ajaxCall(
+          "PUT",
+          api,
+          JSON.stringify(Updateuser),
+          updateSuccessCB,
+          updateErrorCB
+        );
+        return false;
+      }
+
+      function updateSuccessCB(response) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Your details have been updated successfully!",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+      }
+
+      function updateErrorCB(err) {
+        console.log("Error Callback Triggered");
+        console.log("Status Code:", err.status); // סטטוס HTTP
+        console.log("Response Text:", err.responseText); // תוכן התשובה מהשרת
+        console.log("Error Details:", err); // מידע נוסף על השגיאה
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed",
+          text: "An error occurred while updating your details.",
+        });
+      }
+    </script>
+    <!-- פונקציית תפריט צד -->
+    <script>
+      function toggleMenu() {
+        document.getElementById("sideMenu").classList.toggle("open");
+      }
+    </script>
+  </head>
+  <body>
+    <div class="background-carousel"></div>
+    <!-- אייקון התפריט: יוצג בעיקר במובייל -->
+    <div class="menu-icon" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- תפריט צד שנפתח בלחיצה על אייקון התפריט -->
+    <div class="side-menu" id="sideMenu">
+      <a href="./MyGames.html">My Games</a>
+      <a href="./PersonalDetails.html">Edit Personal Details</a>
+      <a href="./login-register.html">Login/Register</a>
+    </div>
+    <div class="container">
+      <h1 class="forms">Personal Area</h1>
+      <div class="form-container">
+        <form id="updateForm">
+          <h2>Update Personal Details</h2>
+          <label>Name:</label>
+          <input type="text" id="name" placeholder="Enter your Name" required />
+
+          <label>Email:</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            required
+          />
+
+          <label>Password:</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter a new password (Uppercase and Numbers)"
+            pattern="^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]{5,}$"
+            required
+          />
+
+          <button type="submit">Update</button>
+        </form>
+      </div>
+    </div>
+    <!-- כפתורים למעבר -->
+    <a href="./index.html" class="cart-button">
+      <button>
+        <img src="../images/main1.png" alt="backToLibrary" />
+      </button>
+    </a>
+    <a href="./login-register.html" id="LOGINbtn">
+      <button>
+        <img src="../images/logi.png" alt="Loginbtn" />
+      </button>
+    </a>
+    <a href="./PersonalDetails.html" id="EDITbtn">
+      <button>
+        <img src="../images/editd.png" alt="edit" />
+      </button>
+    </a>
+  </body>
+</html>

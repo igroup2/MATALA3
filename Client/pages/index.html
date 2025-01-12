@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/ajaxcalls.js"></script>
+    <link rel="stylesheet" href="../css/style.css" />
+
+    <script>
+      $(document).ready(function () {
+        $(document).on("click", ".btnADD", function () {
+          console.log("try to add a game");
+          const gameCard = $(this).closest(".game-card");
+          let game = {
+            AppID: parseInt(gameCard.find("h3").eq(1).text().trim(), 10), // AppID
+            name: gameCard.find("h3").eq(0).text().trim(), // Name
+            releaseDate: new Date(
+              gameCard
+                .find("p")
+                .eq(0)
+                .text()
+                .replace("Release Date:", "")
+                .trim()
+            ), // Release Date
+            price:
+              parseFloat(
+                gameCard.find("p").eq(1).text().replace("Price: $", "").trim()
+              ) || 0, // Price
+            description: gameCard.find("p").eq(2).text().trim(), // Description
+            headerImage: gameCard.find("img").attr("src"), // Header Image
+            website: gameCard.find("a").attr("href") || "", // Website
+            windows: gameCard.find(".windows").text() === "TRUE", // Windows (convert to boolean)
+            mac: gameCard.find(".mac").text() === "TRUE", // Mac (convert to boolean)
+            linux: gameCard.find(".linux").text() === "TRUE", // Linux (convert to boolean)
+            scoreRank:
+              parseInt(gameCard.find(".scoreRank").text().trim(), 10) || 0, // Score Rank
+            recommendations: gameCard.find(".recommendations").text() || "", // Recommendations
+            publisher: gameCard.find(".publisher").text().trim(), // Publisher
+          };
+          console.log("Game Score Rank:", game.Score_rank);
+          AddToServer(game);
+        });
+      });
+
+      function AddToServer(game) {
+        let parsedUser;
+        let User;
+        let gameID;
+        let userID;
+        console.log("Data being sent:", game);
+        gameID = game.AppID;
+        console.log(gameID);
+        User = localStorage.getItem("user");
+        console.log(User);
+        try {
+          parsedUser = JSON.parse(User);
+          console.log("Parsed User:", parsedUser);
+          console.log("User ID:", parsedUser.id);
+        } catch (error) {
+          console.error("Error parsing user:", error);
+        }
+        userID = parsedUser.id;
+        console.log(userID);
+        const api = `https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Games/BuyAGame?appID=${gameID}&UserId=${userID}`;
+        console.log("API Endpoint:", api);
+
+        ajaxCall("POST", api, null, POSTGamesSCB, POSTGamesECB);
+      }
+
+      function POSTGamesSCB(GameList) {
+        console.log(GameList);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Game successfully added to your Wishlist!",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+
+      function POSTGamesECB(err) {
+        console.log(err);
+        Swal.fire({
+          icon: "error",
+          title: "buy Failed",
+          text: "An error occurred while your trying this game. maybe you already have this one",
+        });
+      }
+    </script>
+    <script>
+      function toggleMenu() {
+        document.getElementById("sideMenu").classList.toggle("open");
+      }
+    </script>
+  </head>
+
+  <body>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <!-- אייקון התפריט: יוצג בעיקר במובייל -->
+    <div class="menu-icon" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- תפריט צד שנפתח בלחיצה על אייקון התפריט -->
+    <div class="side-menu" id="sideMenu">
+      <a href="./MyGames.html">My Games</a>
+      <a href="./PersonalDetails.html">Edit Personal Details</a>
+      <a href="./login-register.html">Login/Register</a>
+    </div>
+    <header>
+      <!-- הכותרת הראשית של העמוד -->
+      <h1>Welcome To Steam Store</h1>
+
+      <!-- לינקים וכפתורים שיופיעו בדסקטופ כרגיל -->
+      <a href="./MyGames.html" class="cart-button">
+        <button>
+          <img src="../images/cart1.png" alt="Addtocart" />
+        </button>
+      </a>
+      <a href="./login-register.html" id="LOGINbtn">
+        <button>
+          <img src="../images/logi.png" alt="Loginbtn" />
+        </button>
+      </a>
+      <a href="./PersonalDetails.html" id="EDITbtn">
+        <button>
+          <img src="../images/editd.png" alt="edit" />
+        </button>
+      </a>
+    </header>
+    <div class="games-container" id="gamesContainer"></div>
+  </body>
+</html>

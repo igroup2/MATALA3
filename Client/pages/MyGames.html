@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Games</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="../js/ajaxcalls.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        GETFromServer();
+        $(document).on("click", "#refresh", function () {
+          $("#priceFilter").val("");
+          $("#scoreFilter").val("");
+          GETFromServer();
+        });
+        // מאזין רק ללחיצות על כפתור DELETE
+        $(document).on("click", ".btnDELETE", function (e) {
+          e.stopPropagation(); // מונע מעבר של האירוע לאלמנטים אחרים
+          const gameCard = $(this).closest(".game-card");
+          const h3s = gameCard.find("h3"); // שליפת כל תגיות ה-h3 בתוך הכרטיס
+          if (h3s.length > 1) {
+            const appID = h3s.eq(1).text().trim(); // שליפת AppID
+            console.log("AppID:", appID);
+            DeleteFromServer(appID, gameCard);
+          } else {
+            console.log("AppID not found in the game card.");
+          }
+        });
+      });
+
+      function GETFromServer() {
+        let User = localStorage.getItem("user");
+        console.log(User);
+        let UserID;
+        if (User) {
+          UserID = JSON.parse(User).id;
+        }
+        const api = `https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Games/${UserID}`;
+
+        ajaxCall("GET", api, null, GETGamesSCB, GETGamesECB);
+      }
+
+      function GETGamesSCB(GameList) {
+        console.log(GameList);
+        const gamesContainer = document.getElementById("gamesContainer");
+        gamesContainer.innerHTML = "";
+        GameList.forEach((game) => {
+          const gameCard = document.createElement("div");
+          gameCard.classList.add("game-card");
+          gameCard.innerHTML = `
+        <img src="${game.headerImage}" alt="${game.name}">
+        <h3>${game.name}</h3>
+        <h3>${game.appID}</h3>
+        <p><strong>Release Date:</strong> ${game.releaseDate}</p>
+        <p><strong>Price:</strong> $${game.price}</p>
+        <p><strong>Score Rank:</strong>${game.scoreRank}</p>
+        <a href="${game.website}" target="_blank">Visit Website</a>
+        <button class="btnDELETE">DELETE</button>
+    `;
+          gamesContainer.appendChild(gameCard);
+        });
+      }
+
+      function GETGamesECB(err) {
+        console.log(err);
+      }
+      function DeleteFromServer(AppID, gameCard) {
+        let User = localStorage.getItem("user");
+        console.log(User);
+        let UserID;
+        if (User) {
+          UserID = JSON.parse(User).id;
+        }
+        console.log("Data being sent:", AppID);
+        const api = `https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Games/${AppID}&${UserID}`;
+        console.log("Request URL:", api);
+        ajaxCall("DELETE", api, DeleteGamesSCB(gameCard), DeleteGamesECB);
+      }
+      function DeleteGamesSCB(gameCard) {
+        gameCard.remove();
+      }
+      function DeleteGamesECB(err) {
+        console.log(err);
+      }
+    </script>
+
+    <script>
+      function filterScore() {
+        let User = localStorage.getItem("user");
+        console.log(User);
+        let UserID;
+        if (User) {
+          UserID = JSON.parse(User).id;
+        }
+        const scoreValue = parseFloat(
+          document.getElementById("scoreFilter").value
+        );
+
+        const api = `https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Games/searchByRankScore/maxRank/${scoreValue}/${UserID}`;
+        console.log("API URL:", api); // בדוק את כתובת ה-API שנשלחת
+        ajaxCall("GET", api, null, GETGamesSCB, GETGamesECB);
+      }
+      function filterPrice() {
+        const maxPrice = parseFloat(
+          document.getElementById("priceFilter").value
+        );
+        let User = localStorage.getItem("user");
+        console.log(User);
+        let UserID;
+        if (User) {
+          UserID = JSON.parse(User).id;
+        }
+        const api = `https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Games/search?MaxPrice=${maxPrice}&UserId=${UserID}`;
+        console.log("API URL:", api); // Debugging
+
+        ajaxCall("GET", api, null, GETGamesSCB, GETGamesECB);
+      }
+    </script>
+    <!-- פונקציית תפריט צד -->
+    <script>
+      function toggleMenu() {
+        document.getElementById("sideMenu").classList.toggle("open");
+      }
+    </script>
+  </head>
+  <body>
+    <!-- אייקון תפריט צד -->
+    <div class="menu-icon" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- תפריט צד -->
+    <div class="side-menu" id="sideMenu">
+      <a href="./index.html">Back to Library</a>
+      <a href="./PersonalDetails.html">Edit Personal Details</a>
+      <a href="./login-register.html">Login/Register</a>
+    </div>
+
+    <!-- כותרת -->
+    <h1>My Favorite Games</h1>
+    <div class="refreshClass">
+      <button id="refresh">refresh</button>
+    </div>
+    <div class="filters">
+      <div class="filter-box">
+        <h3>Filter by Price</h3>
+        <input
+          type="number"
+          id="priceFilter"
+          placeholder="Enter maximum price..."
+        />
+        <button id="searchBTNprice" onclick="filterPrice()">Search</button>
+      </div>
+      <div class="filter-box">
+        <h3>Filter by Score</h3>
+        <input
+          type="number"
+          id="scoreFilter"
+          placeholder="Enter minimum score..."
+        />
+        <button id="searchBTNscore" onclick="filterScore()">Search</button>
+      </div>
+    </div>
+    <!-- כפתורים למעבר -->
+    <a href="./index.html" class="cart-button">
+      <button>
+        <img src="../images/main1.png" alt="backToLibrary" />
+      </button>
+    </a>
+    <a href="./login-register.html" id="LOGINbtn">
+      <button>
+        <img src="../images/logi.png" alt="Loginbtn" />
+      </button>
+    </a>
+    <a href="./PersonalDetails.html" id="EDITbtn">
+      <button>
+        <img src="../images/editd.png" alt="edit" />
+      </button>
+    </a>
+    <!-- מכולת המשחקים -->
+    <div class="games-container" id="gamesContainer"></div>
+  </body>
+</html>

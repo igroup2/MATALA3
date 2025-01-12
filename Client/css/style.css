@@ -1,0 +1,505 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
+
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #1b2838; /* רקע כהה */
+  color: #c7d5e0; /* טקסט בהיר */
+}
+
+/* כותרות עם פונט גיימינג */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+  color: #66c0f4;
+  text-shadow: 0 0 10px rgba(102, 192, 244, 0.7); /* זוהר קל */
+}
+
+/* פונט עבור כפתורים, קישורים בתפריט הצד וקישורי המשחקים */
+.btnADD,
+.btnDELETE,
+#delete,
+button,
+.side-menu a,
+.game-card a {
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+}
+
+/* מכולת המשחקים */
+.games-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* כרטיס משחק */
+.game-card {
+  background-color: #2a475e;
+  border: 1px solid #1b2838;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 300px;
+  padding: 15px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* תמונת משחק */
+.game-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* כותרת משחק */
+.game-card h3 {
+  margin: 10px 0;
+  font-size: 18px;
+  color: #66c0f4;
+  text-align: center;
+  text-shadow: 0 0 5px rgba(102, 192, 244, 0.7);
+}
+
+/* פרטי משחק */
+.game-card p {
+  color: #acb2b8;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* כפתור כניסה לאתר */
+.game-card a {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  color: #66c0f4;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.game-card a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* כותרת עמוד */
+h1 {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 36px;
+}
+
+/* כפתורי פעולה */
+.btnADD,
+.btnDELETE,
+#delete {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  color: #ffffff;
+  background-color: #66c0f4;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btnADD:hover,
+#delete,
+.btnDELETE:hover {
+  background-color: #4a91c2;
+  transform: scale(1.05);
+}
+
+/* כפתור הוספה */
+.btnADD button {
+  background-color: #5cbd76;
+  justify-content: center;
+}
+
+.btnADD:hover {
+  background-color: #47a55b;
+}
+
+/* כפתור מחיקה */
+.btnDELETE,
+#delete {
+  background-color: #e74c3c;
+}
+
+#delete,
+.btnDELETE:hover {
+  background-color: #c0392b;
+}
+
+/* כפתור העגלה והלוגין */
+.cart-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #1b2838; /* רקע כחול כהה */
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* ריווח בין האלמנטים */
+  padding: 10px 20px; /* ריווח פנימי */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* צל לתפריט */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* קו תחתון עדין */
+}
+
+header h1 {
+  font-size: 24px; /* כותרת קטנה יותר */
+  color: #66c0f4; /* צבע הכותרת */
+  margin: 0; /* ביטול מרווחים ברירת מחדל */
+  text-align: center;
+  text-shadow: 0 0 10px rgba(102, 192, 244, 0.7); /* זוהר קל */
+  flex: 1; /* גורם לכותרת להתפשט ולהיות במרכז */
+}
+
+#LOGINbtn {
+  position: fixed;
+  width: 90%;
+  left: 20px;
+  z-index: 1000;
+}
+
+#EDITbtn {
+  position: fixed;
+  width: 90%;
+  top: 40px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.cart-button button,
+#EDITbtn button,
+#LOGINbtn button {
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  top: 5px; /* המרחק מהחלק העליון */
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px; /* רוחב הכפתור */
+  height: 45px; /* גובה הכפתור */
+  border: 2px solid #66c0f4;
+  border-radius: 50%;
+  background-color: transparent;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+.cart-button button {
+  right: 20px;
+}
+#LOGINbtn {
+  left: 20px; /* מיקום כפתור LOGIN */
+}
+
+#EDITbtn {
+  left: 90px; /* מיקום כפתור EDIT ליד LOGIN */
+}
+
+.cart-button button:hover,
+#LOGINbtn button:hover,
+#EDITbtn button:hover {
+  background-color: #66c0f4;
+  transform: scale(1.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.cart-button img,
+#LOGINbtn img,
+#EDITbtn img {
+  width: 250%; /* גודל התמונה בכפתור */
+  height: 250%;
+  align-items: center;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+/* עבור הטפסי התחברות */
+.container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: rgba(42, 71, 94, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.forms h1 {
+  text-align: center;
+  color: #66c0f4;
+}
+
+form {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  display: block;
+  margin: 10px 0 5px;
+  color: #c7d5e0;
+}
+
+input {
+  width: 90%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #c7d5e0;
+  border-radius: 5px;
+  background-color: #1b2838;
+  color: #c7d5e0;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #66c0f4;
+  border: none;
+  border-radius: 5px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #4a91c2;
+}
+
+/* css של התמונות המתחלפות */
+.background-carousel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  background-color: rgba(0, 2, 0, 0.899);
+}
+
+.background-carousel img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+/* תפריט צד (Hamburger Menu) */
+.menu-icon {
+  display: none;
+  cursor: pointer;
+  z-index: 1001;
+  position: fixed;
+  top: 20px; /* הורדת האייקון מעט למטה */
+  right: 10px;
+}
+
+.menu-icon span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background: #fff;
+  margin: 5px 0;
+}
+
+.side-menu {
+  position: fixed;
+  top: 60px; /* הורדת התפריט קצת למטה */
+  right: 0;
+  width: 80%;
+  max-width: 300px;
+  height: calc(100% - 60px);
+  background-color: #1b2838;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.side-menu.open {
+  transform: translateX(0);
+}
+
+.side-menu a {
+  margin: 20px 0;
+  color: #66c0f4;
+  text-decoration: none;
+  font-size: 18px;
+  text-shadow: 0 0 5px rgba(102, 192, 244, 0.7);
+}
+
+/* התאמה למובייל */
+@media (max-width: 600px) {
+  .menu-icon {
+    display: block;
+  }
+
+  .cart-button,
+  #LOGINbtn,
+  #EDITbtn {
+    display: none;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin-top: 20px; /* מרווח נוסף מעל הכותרת */
+  }
+}
+
+.read-more-btn {
+  background-color: #66c0f4;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.read-more-btn:hover {
+  background-color: #4a91c2;
+}
+
+/* כפתור הוספה - btnADD */
+.btnADD {
+  display: inline-block;
+  background-color: #5cbd76;
+  color: #ffffff;
+  padding: 5px 10px; /* צמצום גובה ורוחב */
+  font-size: 12px; /* הקטנת גודל הפונט */
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 10px; /* מרווח מעל הכפתור */
+  align-self: center; /* ממורכז בתוך הכרטיס */
+}
+
+.btnADD:hover {
+  background-color: #47a55b;
+  transform: scale(1.05);
+}
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.filter-box {
+  background-color: #2a475e;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; /* רווח בין האלמנטים */
+}
+
+.filter-box h3 {
+  color: #66c0f4;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.filter-box input {
+  width: 90%; /* מתאים את הרוחב של ה-input ל-div */
+  padding: 8px;
+  border: 1px solid #66c0f4;
+  border-radius: 4px;
+  background-color: #1b2838;
+  color: #c7d5e0;
+  font-size: 14px;
+  box-sizing: border-box; /* מבטיח שה-padding נכלל ברוחב */
+}
+
+#refresh {
+  width: 120px;
+}
+.refreshClass {
+  display: flex;
+  justify-content: center;
+}
+.filter-box button {
+  background-color: #66c0f4;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.filter-box button:hover {
+  background-color: #4a91c2;
+}
+/* עיצוב האזור של מספר ההורדות */
+.NumOfPurc {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.NumOfPurc img {
+  height: 40px;
+  width: 40px;
+}
+
+.background-carousel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+}
