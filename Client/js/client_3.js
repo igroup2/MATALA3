@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function GETFromServer() {
     const api = "https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Games";
+    console.log(api);
+    console.log("check");
     ajaxCall("GET", api, "", GETGamesSCB, GETGamesECB);
   }
 
