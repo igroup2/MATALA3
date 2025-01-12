@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   GETFromServer();
 
   function GETFromServer() {
-    const api = "https://localhost:7287/api/Games";
+    const api = "https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Games";
     ajaxCall("GET", api, "", GETGamesSCB, GETGamesECB);
   }
 
