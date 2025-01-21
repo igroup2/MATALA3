@@ -38,7 +38,7 @@
           password: $("#registerPassword").val(),
         };
 
-        const api = "https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Users";
+        const api = "https://localhost:7287/api/Users";
         console.log(user.name);
         ajaxCall("POST", api, JSON.stringify(user), POSTUsersSCB, POSTUsersECB);
         return false;
@@ -75,7 +75,7 @@
         };
 
         const api =
-          "https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Users/login";
+          "https://localhost:7287/api/Users/login";
         ajaxCall(
           "POST",
           api,
@@ -273,6 +273,7 @@
               pattern="^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]{5,}$"
               required
             />
+            
 
             <button>Register</button>
           </form>

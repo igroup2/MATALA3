@@ -72,7 +72,7 @@
         }
         userID = parsedUser.id;
         console.log(userID);
-        const api = `https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Games/BuyAGame?appID=${gameID}&UserId=${userID}`;
+        const api = `https://localhost:7287/api/Games/BuyAGame?appID=${gameID}&UserId=${userID}`;
         console.log("API Endpoint:", api);
 
         ajaxCall("POST", api, null, POSTGamesSCB, POSTGamesECB);
