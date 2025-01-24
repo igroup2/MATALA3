@@ -38,7 +38,7 @@
           email: $("#registerEmail").val(),
           password: $("#registerPassword").val(),
         };
-
+        // comment check
         const api = "https://localhost:7287/api/Users";
         console.log(user.name);
         ajaxCall("POST", api, JSON.stringify(user), POSTUsersSCB, POSTUsersECB);
