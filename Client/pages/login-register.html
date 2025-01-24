@@ -39,6 +39,7 @@
           password: $("#registerPassword").val(),
         };
         // comment check
+        // comment 2
         const api = "https://localhost:7287/api/Users";
         console.log(user.name);
         ajaxCall("POST", api, JSON.stringify(user), POSTUsersSCB, POSTUsersECB);
