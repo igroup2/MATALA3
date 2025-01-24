@@ -19,6 +19,9 @@
 
     <script>
       $(document).ready(function () {
+        var user = JSON.parse(localStorage.getItem("user"));
+        let Header = document.querySelector(".forms");
+        Header.innerHTML += `, ${user.name}`;
         $(document).on("click", ".btnADD", function () {
           console.log("try to add a game");
           const gameCard = $(this).closest(".game-card");
@@ -126,7 +129,7 @@
     </div>
     <header>
       <!-- הכותרת הראשית של העמוד -->
-      <h1>Welcome To Steam Store</h1>
+      <h1 class="forms">Welcome To Steam Store</h1>
 
       <!-- לינקים וכפתורים שיופיעו בדסקטופ כרגיל -->
       <a href="./MyGames.html" class="cart-button">

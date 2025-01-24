@@ -15,8 +15,13 @@ namespace SteamStore.Controllers
         {
             return SteamStore.Models.User.Read();
         }
+        [HttpPost("checkDetails")]
+        public User Login([FromBody] User user)
+        {
+            return SteamStore.Models.User.CheckLogin(user.Email, user.Password);
+        }
 
- 
+
         // GET api/<UsersController>/GetId
         [HttpGet("{email}")]
         public User GetUserId(string email)
@@ -30,14 +35,16 @@ namespace SteamStore.Controllers
         {
             return user.Insert();
         }
+        
 
         // POST api/<UsersController>/login
-           [HttpPost("login")]
-         public User Login([FromBody] User user)
+        /*
+        [HttpPost("login")]
+        public User Login([FromBody] User user)
           {
               return SteamStore.Models.User.CheckLogin(user.Email,user.Password); 
          }
-
+        */
 
         // PUT api/<UsersController>/5
         [HttpPut("UpdateDetails")]
@@ -45,6 +52,7 @@ namespace SteamStore.Controllers
         {
             return user.Update();
         }
+        
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]

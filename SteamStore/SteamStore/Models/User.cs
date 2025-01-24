@@ -31,7 +31,14 @@
             //  return 0;
         }
 
+        public int logIn()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.logIn(this);
 
+
+            //  return 1;
+        }
         public int Insert()
         {
             DBservices dbs = new DBservices();

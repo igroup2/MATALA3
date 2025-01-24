@@ -14,6 +14,10 @@
 
     <script>
       $(document).ready(function () {
+        var user = JSON.parse(localStorage.getItem("user"));
+        let Header = document.querySelector(".headLine");
+        Header.innerHTML += `, ${user.name}`;
+
         GETFromServer();
         $(document).on("click", "#refresh", function () {
           $("#priceFilter").val("");
@@ -146,7 +150,7 @@
     </div>
 
     <!-- כותרת -->
-    <h1>My Favorite Games</h1>
+    <h1 class="headLine">My Favorite Games</h1>
     <div class="refreshClass">
       <button id="refresh">refresh</button>
     </div>

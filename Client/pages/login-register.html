@@ -16,6 +16,7 @@
     <script>
       $(document).ready(function () {
         console.log("Document ready!");
+
         $("#registerForm").submit((event) => {
           event.preventDefault();
           console.log("Form submitted!"); // בדוק אם הפונקציה פועלת
@@ -44,7 +45,11 @@
         return false;
       }
 
-      function POSTUsersSCB() {
+      function POSTUsersSCB(data) {
+        if (data == -1) {
+          alert("Email Already Exsists");
+          return;
+        }
         Swal.fire({
           position: "center",
           icon: "success",
@@ -66,6 +71,8 @@
 
       function Login() {
         console.log("try to log in");
+        console.log($("#loginEmail").val());
+        console.log($("#loginPassword").val());
         let user = {
           id: 0,
           name: "",
@@ -73,7 +80,8 @@
           password: $("#loginPassword").val(),
         };
 
-        const api = "https://localhost:7287/api/Users/login";
+        const api = "https://localhost:7287/api/Users/checkDetails";
+        console.log(user);
         ajaxCall(
           "POST",
           api,
@@ -82,29 +90,35 @@
           POSTUsersLogECB
         );
         return false;
-      }
 
-      function POSTUsersLogSCB(user) {
-        console.log(user);
-        localStorage.setItem("user", JSON.stringify(user));
-        console.log(
-          "User saved to local storage:",
-          localStorage.getItem("user")
-        );
+        function POSTUsersLogSCB(user) {
+          console.log(user);
+          localStorage.setItem("user", JSON.stringify(user));
+          console.log(
+            "User saved to local storage:",
+            localStorage.getItem("user")
+          );
 
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Welcome to SteamStore Website",
-          showConfirmButton: false,
-          timer: 3000,
-        }).then(() => {
-          window.location.href = "./index.html";
-        });
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Welcome to SteamStore Website",
+            showConfirmButton: false,
+            timer: 3000,
+          }).then(() => {
+            window.location.href = "./index.html";
+          });
+        }
       }
 
       function POSTUsersLogECB(err) {
-        console.log(err);
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "User Not Found",
+          showConfirmButton: true,
+          timer: 3000,
+        });
       }
 
       $(document).on("input", "#registerPassword", function () {
