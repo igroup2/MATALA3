@@ -14,6 +14,10 @@
 
     <script>
       $(document).ready(function () {
+        var user = JSON.parse(localStorage.getItem("user"));
+        let Header = document.querySelector(".headLine");
+        Header.innerHTML += `, ${user.name}`;
+
         GETFromServer();
         $(document).on("click", "#refresh", function () {
           $("#priceFilter").val("");
@@ -42,7 +46,7 @@
         if (User) {
           UserID = JSON.parse(User).id;
         }
-        const api = `https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Games/${UserID}`;
+        const api = `https://localhost:7287/api/Games/${UserID}`;
 
         ajaxCall("GET", api, null, GETGamesSCB, GETGamesECB);
       }
@@ -79,7 +83,7 @@
           UserID = JSON.parse(User).id;
         }
         console.log("Data being sent:", AppID);
-        const api = `https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Games/${AppID}&${UserID}`;
+        const api = `https://localhost:7287/api/Games/${AppID}&${UserID}`;
         console.log("Request URL:", api);
         ajaxCall("DELETE", api, DeleteGamesSCB(gameCard), DeleteGamesECB);
       }
@@ -103,7 +107,7 @@
           document.getElementById("scoreFilter").value
         );
 
-        const api = `https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Games/searchByRankScore/maxRank/${scoreValue}/${UserID}`;
+        const api = `https://localhost:7287/api/Games/searchByRankScore/maxRank/${scoreValue}/${UserID}`;
         console.log("API URL:", api); // בדוק את כתובת ה-API שנשלחת
         ajaxCall("GET", api, null, GETGamesSCB, GETGamesECB);
       }
@@ -117,7 +121,7 @@
         if (User) {
           UserID = JSON.parse(User).id;
         }
-        const api = `https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Games/search?MaxPrice=${maxPrice}&UserId=${UserID}`;
+        const api = `https://localhost:7287/api/Games/search?MaxPrice=${maxPrice}&UserId=${UserID}`;
         console.log("API URL:", api); // Debugging
 
         ajaxCall("GET", api, null, GETGamesSCB, GETGamesECB);
@@ -146,7 +150,7 @@
     </div>
 
     <!-- כותרת -->
-    <h1>My Favorite Games</h1>
+    <h1 class="headLine">My Favorite Games</h1>
     <div class="refreshClass">
       <button id="refresh">refresh</button>
     </div>

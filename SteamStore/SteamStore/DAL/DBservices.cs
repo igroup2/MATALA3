@@ -161,7 +161,51 @@ public class DBservices
             }
         }
     }
-   //
+    public int logIn(User user)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+        paramDic.Add("@Name", user.Name);
+        paramDic.Add("@Email", user.Email);
+        paramDic.Add("@Password", user.Password);
+
+
+        cmd = CreateCommandWithStoredProcedureGeneral("SP_loginUser", con, paramDic);          // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
+    //
 
     //---------------------------------------------------------------------------------
     // Create the SqlCommand
@@ -195,7 +239,7 @@ public class DBservices
     // This method Check a User to the User table 
     //--------------------------------------------------------------------------------------------------
     //
-    public User Check(string Email, string Password)
+    public User Check(string email, string password)
     {
 
         SqlConnection con;
@@ -212,14 +256,15 @@ public class DBservices
         }
 
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
-        paramDic.Add("@Email", Email);
-        paramDic.Add("@Password", Password);
-
+        paramDic.Add("@Email", email);
+        paramDic.Add("@Password", password);
+       
         cmd = CreateCommandWithStoredProcedureCheck("SP_CheckLogIn", con, paramDic);
         SqlDataReader TheUser = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
 
         User user = new User();
+        
         while (TheUser.Read())
         {
             user.Id = Convert.ToInt32(TheUser["Id"]);
@@ -227,7 +272,10 @@ public class DBservices
             user.Email = TheUser["Email"].ToString();
             user.Password = TheUser["Password"].ToString();
         }
-
+        if (user.Email == null)
+        {
+            throw new Exception("User is Not Exsists!");
+        }
 
         // create the command
         return user;
