@@ -1,0 +1,51 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.table-title {
+    color: blue;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.table-container {
+    margin-bottom: 30px;
+}
+
+.dataTables_wrapper {
+    margin: 20px 0;
+}
+
+.btn {
+    margin: 5px;
+}
+
+.switcher {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-label {
+    margin-right: 10px;
+}
+
+.dropdown {
+    margin-right: 10px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    margin: 0 5px;
+}
