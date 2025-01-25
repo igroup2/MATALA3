@@ -45,11 +45,18 @@
         return false;
       }
 
-      function POSTUsersSCB(data) {
-        if (data == -1) {
-          alert("Email Already Exsists");
-          return;
-        }
+      function POSTUsersSCB(user) {
+        // נקה את ה-localStorage
+        localStorage.removeItem("user");
+
+        // שמור את המשתמש החדש ב-localStorage
+        localStorage.setItem("user", JSON.stringify(user));
+
+        console.log(
+          "User saved to local storage:",
+          localStorage.getItem("user")
+        );
+
         Swal.fire({
           position: "center",
           icon: "success",
@@ -66,7 +73,24 @@
       }
 
       function POSTUsersECB(err) {
-        console.log(err);
+        if (err) {
+          // בדוק אם מדובר בשגיאת יוזר קיים
+          if (
+            err.message.includes("A user with these details already exists")
+          ) {
+            console.error("Error: The user already exists.");
+            alert(
+              "שם המשתמש או האימייל שהזנת כבר קיים במערכת. אנא נסה פרטים אחרים."
+            );
+          } else {
+            // שגיאה כללית
+            console.error("An unexpected error occurred:", err);
+            alert("אירעה שגיאה בלתי צפויה. אנא נסה שוב מאוחר יותר.");
+          }
+        } else {
+          console.log("User created successfully.");
+          alert("המשתמש נוצר בהצלחה!");
+        }
       }
 
       function Login() {
@@ -110,12 +134,16 @@
           });
         }
       }
-
       function POSTUsersLogECB(err) {
+        const errorMessage =
+          err.responseJSON?.message ||
+          "An unknown error occurred. Please try again.";
+
         Swal.fire({
           position: "center",
           icon: "error",
-          title: "User Not Found",
+          title: "Login Failed",
+          text: errorMessage, // הודעת השגיאה מהשרת
           showConfirmButton: true,
           timer: 3000,
         });

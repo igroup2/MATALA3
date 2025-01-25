@@ -61,5 +61,14 @@ namespace SteamStore.Controllers
            return  SteamStore.Models.Game.DeleteById(GameId, UserId);
         }
 
+
+        // GET api/<UsersController>/GetId
+        [HttpGet("SpecificGameInfo")]
+        public Object GetGameInfo()
+        {
+            Game game = new Game();
+            return game.GetGameInfo();
+        }
+
     }
 }

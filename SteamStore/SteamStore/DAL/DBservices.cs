@@ -117,7 +117,7 @@ public class DBservices
     // This method insert a User to the User table 
     //--------------------------------------------------------------------------------------------------
     //
-    public int Insert(User user)
+    public User Insert(User user)
     {
 
         SqlConnection con;
@@ -140,70 +140,36 @@ public class DBservices
     
 
         cmd = CreateCommandWithStoredProcedureGeneral("SP_InsertUser", con, paramDic);          // create the command
+        SqlParameter returnValue = new SqlParameter
+        {
+            Direction = ParameterDirection.ReturnValue
+        };
+        cmd.Parameters.Add(returnValue);
+        SqlDataReader TheUser = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
-        try
+        int status = (int)returnValue.Value;
+
+
+
+        if (returnValue.Value != null && (int)returnValue.Value == 1)
         {
-            int numEffected = cmd.ExecuteNonQuery(); // execute the command
-            return numEffected;
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
+            // סגור את החיבור במקרה של כשל
+            if (con.State == ConnectionState.Open)
+                con.Close();
+
+            throw new Exception("A user with these details already exists. ");
         }
 
-        finally
-        {
+       
+
             if (con != null)
             {
                 // close the db connection
                 con.Close();
             }
-        }
-    }
-    public int logIn(User user)
-    {
+        
 
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-        paramDic.Add("@Name", user.Name);
-        paramDic.Add("@Email", user.Email);
-        paramDic.Add("@Password", user.Password);
-
-
-        cmd = CreateCommandWithStoredProcedureGeneral("SP_loginUser", con, paramDic);          // create the command
-
-        try
-        {
-            int numEffected = cmd.ExecuteNonQuery(); // execute the command
-            return numEffected;
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
+        return user;
     }
     //
 
@@ -252,35 +218,54 @@ public class DBservices
         catch (Exception ex)
         {
             // write to log
-            throw (ex);
+            throw new Exception("Database connection error: " + ex.Message);
         }
 
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
         paramDic.Add("@Email", email);
         paramDic.Add("@Password", password);
-       
+
         cmd = CreateCommandWithStoredProcedureCheck("SP_CheckLogIn", con, paramDic);
+
+        SqlParameter returnValue = new SqlParameter
+        {
+            Direction = ParameterDirection.ReturnValue
+        };
+        cmd.Parameters.Add(returnValue);
         SqlDataReader TheUser = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
+        int status = (int)returnValue.Value;
+
+
+        if (returnValue.Value != null && (int)returnValue.Value == 0)
+        {
+            // סגור את החיבור במקרה של כשל
+            if (con.State == ConnectionState.Open)
+                con.Close();
+
+            throw new Exception("The User is inactive.");
+        }
 
         User user = new User();
-        
+
         while (TheUser.Read())
         {
             user.Id = Convert.ToInt32(TheUser["Id"]);
             user.Name = TheUser["Name"].ToString();
             user.Email = TheUser["Email"].ToString();
             user.Password = TheUser["Password"].ToString();
+            user.IsActive = Convert.ToBoolean(TheUser["isActive"]);
         }
-        if (user.Email == null)
+      if (user == null)
         {
-            throw new Exception("User is Not Exsists!");
+            throw new Exception("Unexpected error: User data not retrieved.");
         }
+
 
         // create the command
         return user;
 
- 
+
 
     }
     //
@@ -946,6 +931,150 @@ public class DBservices
     // Create the SqlCommand
     //---------------------------------------------------------------------------------
     private SqlCommand CreateCommandWithStoredProcedureDeleteAGame(String spName, SqlConnection con, Dictionary<string, object> paramDic)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        if (paramDic != null)
+            foreach (KeyValuePair<string, object> param in paramDic)
+            {
+                cmd.Parameters.AddWithValue(param.Key, param.Value);
+
+            }
+
+
+        return cmd;
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    // This method bring specific info about the user
+    //--------------------------------------------------------------------------------------------------
+    //
+    public Object GetUserInfo()
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        List<object> listOfUsers = new List<object>();
+       
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+
+        cmd = CreateCommandWithStoredProcedureUserSpecificInfo("SP_UsersSpecificInfo", con, paramDic);
+
+        SqlDataReader UserSpecificInfo = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+        while (UserSpecificInfo.Read())
+        {
+            listOfUsers.Add(new
+            {
+                Id = Convert.ToInt32(UserSpecificInfo["Id"]),
+                name = UserSpecificInfo["name"].ToString(),
+                NumOfGamesBought = Convert.ToInt32(UserSpecificInfo["NumOfGamesBought"]),
+                TotalSpent = Convert.ToInt32(UserSpecificInfo["TotalSpent"]),
+                isActive = Convert.ToBoolean(UserSpecificInfo["isActive"])
+            });
+        }
+
+        return listOfUsers;
+    
+    }
+    //
+
+    //---------------------------------------------------------------------------------
+    // Create the SqlCommand
+    //---------------------------------------------------------------------------------
+    private SqlCommand CreateCommandWithStoredProcedureUserSpecificInfo(String spName, SqlConnection con, Dictionary<string, object> paramDic)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        if (paramDic != null)
+            foreach (KeyValuePair<string, object> param in paramDic)
+            {
+                cmd.Parameters.AddWithValue(param.Key, param.Value);
+
+            }
+
+
+        return cmd;
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    // This method bring specific info about the Game
+    //--------------------------------------------------------------------------------------------------
+    //
+    public Object GetGameInfo()
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        List<object> listOfGames = new List<object>();
+
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+
+        cmd = CreateCommandWithStoredProcedureGameSpecificInfo("SP_GameSpecificInfo", con, paramDic);
+
+        SqlDataReader GameSpecificInfo = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+        while (GameSpecificInfo.Read())
+        {
+            listOfGames.Add(new
+            {
+                appID = Convert.ToInt32(GameSpecificInfo["appID"]),
+                Name = GameSpecificInfo["Name"].ToString(),
+                numberOfPurchases = Convert.ToInt32(GameSpecificInfo["numberOfPurchases"]),
+                TotalSpent = Convert.ToInt32(GameSpecificInfo["TotalSpent"])            });
+        }
+
+        return listOfGames;
+
+    }
+    //
+
+    //---------------------------------------------------------------------------------
+    // Create the SqlCommand
+    //---------------------------------------------------------------------------------
+    private SqlCommand CreateCommandWithStoredProcedureGameSpecificInfo(String spName, SqlConnection con, Dictionary<string, object> paramDic)
     {
 
         SqlCommand cmd = new SqlCommand(); // create the command object
