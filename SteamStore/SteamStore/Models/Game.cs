@@ -95,7 +95,11 @@
              return dbs.DeleteById(GameId, UserId);
         }
 
-
+        public object GetGameInfo()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetGameInfo();
+        }
 
     }
 
