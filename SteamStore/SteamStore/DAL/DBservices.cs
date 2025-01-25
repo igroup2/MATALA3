@@ -147,6 +147,8 @@ public class DBservices
         cmd.Parameters.Add(returnValue);
         SqlDataReader TheUser = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
+        
+        /*
         int status = (int)returnValue.Value;
 
 
@@ -160,7 +162,7 @@ public class DBservices
             throw new Exception("A user with these details already exists. ");
         }
 
-       
+       */ 
 
             if (con != null)
             {
@@ -234,9 +236,9 @@ public class DBservices
         cmd.Parameters.Add(returnValue);
         SqlDataReader TheUser = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
-        int status = (int)returnValue.Value;
+        //int status = (int)returnValue.Value;
 
-
+        /*
         if (returnValue.Value != null && (int)returnValue.Value == 0)
         {
             // סגור את החיבור במקרה של כשל
@@ -245,7 +247,7 @@ public class DBservices
 
             throw new Exception("The User is inactive.");
         }
-
+        */
         User user = new User();
 
         while (TheUser.Read())
@@ -1063,7 +1065,8 @@ public class DBservices
                 appID = Convert.ToInt32(GameSpecificInfo["appID"]),
                 Name = GameSpecificInfo["Name"].ToString(),
                 numberOfPurchases = Convert.ToInt32(GameSpecificInfo["numberOfPurchases"]),
-                TotalSpent = Convert.ToInt32(GameSpecificInfo["TotalSpent"])            });
+                TotalSpent = Convert.ToInt32(GameSpecificInfo["TotalSpent"])            
+            });
         }
 
         return listOfGames;
