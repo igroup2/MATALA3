@@ -503,3 +503,35 @@ button:hover {
 canvas {
   display: block;
 }
+
+#Table-BTN {
+  display: flex;
+  flex-direction: unset;
+  position: fixed;
+  width: 90%;
+  top: 40px;
+  right: 20px;
+  z-index: 1000;
+}
+
+#Table-BTN button {
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  top: 5px; /* המרחק מהחלק העליון */
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  right: 90px;
+  justify-content: center;
+  width: 45px; /* רוחב הכפתור */
+  height: 45px; /* גובה הכפתור */
+  border: 2px solid #66c0f4;
+  border-radius: 50%;
+  background-color: transparent;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
