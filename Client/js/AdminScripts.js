@@ -12,8 +12,8 @@ $(document).ready(function () {
       title: "Active Status",
       render: function (data) {
         return data
-          ? '<input type="checkbox" checked disabled />'
-          : '<input type="checkbox" disabled />';
+          ? '<input type="checkbox" checked  />'
+          : '<input type="checkbox"  />';
       },
     },
   ];
