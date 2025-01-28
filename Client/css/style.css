@@ -535,3 +535,19 @@ canvas {
   transition: all 0.3s ease;
   overflow: hidden;
 }
+#Table-BTN {
+  display: flex;         /* יישור אלמנטים בשורה אחת */
+  align-items: center;   /* יישור אנכי */
+  position: fixed;       /* מיקום קבוע */
+  top: 40px;             /* מיקום אנכי */
+  right: 20px;           /* מיקום בצד ימין */
+  z-index: 1000;         /* וודא שהוא מעל אלמנטים אחרים */
+}
+
+.datatable-text {
+  font-size: 14px;       /* גודל הפונט */
+  color: #66c0f4;        /* צבע הטקסט */
+  margin-right: 120px;   /* מרווח גדול במיוחד להזזת הטקסט שמאלה */
+  font-weight: bold;     /* הדגשה */
+  white-space: nowrap;   /* ודא שהטקסט לא נשבר לשורה חדשה */
+}

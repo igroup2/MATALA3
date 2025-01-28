@@ -23,7 +23,7 @@ $(document).ready(function () {
     const userId = $(this).data("id"); // Get the user ID
     const isActive = $(this).is(":checked"); // true if checked, false if unchecked
     console.log(userId, isActive);
-    let api = `https://localhost:7287/api/Users/UpdateUserStatus?isActive=${isActive}`;
+    let api = `https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Users/UpdateUserStatus?isActive=${isActive}`;
     // https://localhost:7287/api/Users/UpdtaeUserStatus?isActive=false
     ajaxCall(
       "PUT",
@@ -59,8 +59,8 @@ $(document).ready(function () {
   function fetchAndLoadTable(tableType) {
     const apiUrl =
       tableType === "users"
-        ? "https://localhost:7287/api/Users/SpecificUserInfo"
-        : "https://localhost:7287/api/Games/SpecificGameInfo";
+        ? "https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Users/SpecificUserInfo"
+        : "https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Games/SpecificGameInfo";
 
     const columns = tableType === "users" ? userColumns : gameColumns;
 
