@@ -10,13 +10,33 @@ $(document).ready(function () {
     {
       data: "isActive",
       title: "Active Status",
-      render: function (data) {
-        return data
-          ? '<input type="checkbox" checked  />'
-          : '<input type="checkbox"  />';
+      render: function (data, type, row) {
+        return `<input type="checkbox" class="active-checkbox" data-id="${
+          row.id
+        }" 
+        ${data ? "checked" : ""} />`;
       },
     },
   ];
+
+  $("#dataTable").on("change", ".active-checkbox", function () {
+    const userId = $(this).data("id"); // Get the user ID
+    const isActive = $(this).is(":checked"); // true if checked, false if unchecked
+    console.log(userId, isActive);
+    let api = `https://localhost:7287/api/Users/UpdateUserStatus?isActive=${isActive}`;
+    // https://localhost:7287/api/Users/UpdtaeUserStatus?isActive=false
+    ajaxCall(
+      "PUT",
+      api,
+      JSON.stringify(userId),
+      function (response) {
+        console.log(response);
+      },
+      function (error) {
+        console.error(error);
+      }
+    );
+  });
 
   const gameColumns = [
     { data: "appID", title: "Game ID" },
