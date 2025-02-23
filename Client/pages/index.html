@@ -19,6 +19,7 @@
 
     <script>
       $(document).ready(function () {
+        CheckAdmin();
         var user = JSON.parse(localStorage.getItem("user"));
         let Header = document.querySelector(".forms");
         Header.innerHTML += `, ${user.name}`;
@@ -75,7 +76,7 @@
         }
         userID = parsedUser.id;
         console.log(userID);
-        const api = `https://localhost:7287/api/Games/BuyAGame?appID=${gameID}&UserId=${userID}`;
+        const api = `https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Games/BuyAGame?appID=${gameID}&UserId=${userID}`;
         console.log("API Endpoint:", api);
 
         ajaxCall("POST", api, null, POSTGamesSCB, POSTGamesECB);
@@ -105,6 +106,16 @@
       function toggleMenu() {
         document.getElementById("sideMenu").classList.toggle("open");
       }
+      
+      function CheckAdmin() {
+        const useremail = JSON.parse(localStorage.getItem("user")).email;
+        console.log(useremail);
+        if (useremail === "admin@admin.com") {
+          document.getElementById("Table-BTN").style.display = "block";
+        } else {
+          document.getElementById("Table-BTN").style.display = "none";
+        }
+      }
     </script>
   </head>
 
@@ -133,9 +144,16 @@
 
       <!-- לינקים וכפתורים שיופיעו בדסקטופ כרגיל -->
       <a href="./MyGames.html" class="cart-button">
+        <span class="datatable-text">Data-Tables</span>
         <button>
           <img src="../images/cart1.png" alt="Addtocart" />
         </button>
+      </a>
+      <a href="./adminPage.html" id="Table-BTN" class="cart-button">
+        <button>
+          <img src="../images/AdminBtn.png" alt="Addtocart" />
+        </button>
+       
       </a>
       <a href="./login-register.html" id="LOGINbtn">
         <button>

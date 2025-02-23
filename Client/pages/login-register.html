@@ -39,7 +39,7 @@
           password: $("#registerPassword").val(),
         };
         // comment yuval to amir
-        const api = "https://localhost:7287/api/Users";
+        const api = "https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Users";
         console.log(user.name);
         ajaxCall("POST", api, JSON.stringify(user), POSTUsersSCB, POSTUsersECB);
         return false;
@@ -104,7 +104,7 @@
           password: $("#loginPassword").val(),
         };
 
-        const api = "https://localhost:7287/api/Users/checkDetails";
+        const api = "https://proj.ruppin.ac.il/igroup2/test2/tar1/api/Users/checkDetails";
         console.log(user);
         ajaxCall(
           "POST",

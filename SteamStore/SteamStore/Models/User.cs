@@ -1,4 +1,6 @@
-﻿namespace SteamStore.Models
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace SteamStore.Models
 
 {
     public class User
@@ -55,8 +57,13 @@
             DBservices dbs = new DBservices();
             return dbs.Update(this);
         }
+        public int UpdateUserStatus( int userID, bool isActive)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.UpdateUserStatus(userID, isActive);
+        }
 
-       static public List<User> Read()
+        static public List<User> Read()
         {
             DBservices dbs = new DBservices();
             return dbs.Read();

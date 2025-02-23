@@ -1100,5 +1100,54 @@ public class DBservices
 
         return cmd;
     }
+    public int UpdateUserStatus(int userID ,bool checkBox)
+    {
 
+        SqlConnection con;
+        SqlCommand cmd;
+         
+        
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        int isActive = 0; 
+        if (checkBox)
+        {
+            isActive = 1;
+        }
+        
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+        paramDic.Add("@ID", userID);
+        paramDic.Add("@isActive", isActive);
+        cmd = CreateCommandWithStoredProcedureGameSpecificInfo("SP_changeUserStatus", con, paramDic);
+
+        
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+
+    }
 }

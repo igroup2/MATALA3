@@ -72,7 +72,14 @@ namespace SteamStore.Controllers
         {
             return user.Update();
         }
+        [HttpPut("UpdateUserStatus")]
+        public int Put([FromBody] int userID, bool isActive)
         
+        {
+            User u = new User(); 
+            return u.UpdateUserStatus( userID,  isActive);
+        }
+
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
